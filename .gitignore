@@ -1,5 +1,0 @@
-.gitignore
-.dockerignore
-Dockerfile
-requirements.txt
-fuzzyDocumentScanner.py
