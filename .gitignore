@@ -1,3 +1,6 @@
-fuzzyDocumentScanner
+fuzzyDocumentScanner.py
 Dockerfile
-requirements
+requirements.txt
+.gitignore
+.dockerignore
+Dockerfile
