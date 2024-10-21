@@ -1,6 +1,7 @@
 import pytesseract
 import cv2
 import re
+import sys
 
 # Constants
 TESSERACT_PATH = r'C:/Program Files/Tesseract-OCR/tesseract.exe'
@@ -26,8 +27,6 @@ def extract_text(mask):
         print("text length is",len(text))
         if(len(text)<=100):
             mask = cv2.warpAffine(mask, M, (w, h))
-            cv2.imshow("rotated mask",mask)
-            cv2.waitKey(0)
             text = pytesseract.image_to_string(mask, lang = 'nep+eng')
             text = clean_text(text)
         else:

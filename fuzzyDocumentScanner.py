@@ -8,7 +8,6 @@ from tkinter import filedialog
 
 # Constants
 TESSERACT_PATH = r'C:/Program Files/Tesseract-OCR/tesseract.exe'
-THRESHOLD_VALUE = 122
 
 # Initialize Tesseract
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
@@ -21,13 +20,24 @@ def load_image(image_path):
     return image
 
 def preprocess_image(image):
-    # Convert the image to grayscale and create a binary mask.#
+    # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, mask = cv2.threshold(gray, THRESHOLD_VALUE, 255, cv2.THRESH_BINARY)
+    
+    # Apply denoising to reduce noise
+    denoised = cv2.fastNlMeansDenoising(gray,None, 11, 7, 13)
+    # Apply Gaussian blur to smooth the image
+    blurred = cv2.GaussianBlur(denoised, (7, 5), 0)
+    cv2.imshow('blurred',blurred)
+    cv2.waitKey(0)
+    # Apply adaptive thresholding
+    mask = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                                 cv2.THRESH_BINARY, 13, 2)
     return gray, mask
 
 def extract_text(mask):
     #Use pytesseract to extract text from the binary mask.#
+    osd = pytesseract.image_to_osd(mask, output_type='dict')
+    print(osd)
     text = pytesseract.image_to_string(mask, lang = 'nep+eng')
     # Get the image dimensions
     (h, w) = mask.shape[:2]
