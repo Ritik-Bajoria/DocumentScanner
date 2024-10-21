@@ -35,7 +35,7 @@ def extract_text(mask):
     
     if(len(text)<=100):
         print("\nPlease insert a clearer image\n")
-        sys.exit()
+        return 
     else:
         return text
 
