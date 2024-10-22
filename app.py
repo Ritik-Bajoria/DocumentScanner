@@ -5,9 +5,16 @@ import numpy as np
 from utils.image_processing import load_image, preprocess_image
 from utils.text_extraction import extract_text, clean_text
 from utils.document_classification import classify_document_fuzzy
+from logger import Logger
 # Initialize the Flask app
 
 app = Flask(__name__)
+logger = Logger()
+# Middleware: before each request
+@app.before_request
+def before_request_func():
+    # This will run before every request
+    logger.info(f"Request from {request.remote_addr} at {request.method} {request.url}")
 
 # Route for document classification
 @app.route('/api/scanner', methods=['POST'])
@@ -49,4 +56,6 @@ def classify_document():
 
 # Main entry point
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = 8000
+    app.run(debug=True,port=port)
+    logger.info(f"Server started and is now listening on port: {port}")

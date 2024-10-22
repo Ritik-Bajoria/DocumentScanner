@@ -1,0 +1,13 @@
+2024-10-22 15:42:22 [INFO]: App started on process id: 14348
+2024-10-22 15:42:24 [INFO]: Server started and is now listening on port: 8000
+2024-10-22 09:57:47 [INFO]: App started on process id: 10
+2024-10-22 09:57:47 [INFO]: App started on process id: 8
+2024-10-22 09:57:47 [INFO]: App started on process id: 7
+2024-10-22 09:57:47 [INFO]: App started on process id: 9
+2024-10-22 09:57:58 [INFO]: Request from 172.17.0.1 at POST http://127.0.0.1:8000/api/scanner
+2024-10-22 10:00:56 [INFO]: App started on process id: 7
+2024-10-22 10:00:56 [INFO]: App started on process id: 10
+2024-10-22 10:00:56 [INFO]: App started on process id: 8
+2024-10-22 10:00:56 [INFO]: App started on process id: 9
+2024-10-22 10:01:02 [INFO]: Request from 172.17.0.1 at POST http://127.0.0.1:8000/api/scanner
+2024-10-22 10:05:23 [INFO]: Request from 172.17.0.1 at POST http://127.0.0.1:8000/api/scanner
