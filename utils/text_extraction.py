@@ -36,10 +36,12 @@ def extract_text(mask):
         else:
             break
         angle += 90
-    
-    if(len(text)<=100):
+    print(text)
+    if(len(text)<=5):
+        return "no text"
+    elif(len(text)<=100):
         print("\nPlease insert a clearer image\n")
-        return 
+        return "few text"
     else:
         return text
 

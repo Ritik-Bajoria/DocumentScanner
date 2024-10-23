@@ -37,9 +37,12 @@ def classify_document():
 
         # Extract text from the preprocessed mask
         text = extract_text(mask)
-        if not text:
+        if text == "no text":
+            return jsonify({'warning':'Blank Document detected'})
+        elif text == "few text":
             return jsonify({'error':'Please enter a clearer image'})
-        cleaned_text = clean_text(text)
+        else:
+            cleaned_text = clean_text(text)
 
         # Classify the document
         classification_result, confidence = classify_document_fuzzy(cleaned_text)
