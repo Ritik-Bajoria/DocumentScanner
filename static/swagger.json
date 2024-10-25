@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "http://localhost:8000",
+        "url": "http://127.0.0.1:8000",
         "description": "Local server for development"
       }
     ],
@@ -57,7 +57,49 @@
                       },
                       "extracted_text": {
                         "type": "string",
-                        "description": "text extracted from the document"
+                        "description": "Text extracted from the document"
+                      }
+                    }
+                  },
+                  "examples": {
+                    "PAN": {
+                      "summary": "Example output for PAN card",
+                      "value": {
+                        "classification": "PAN card Detected",
+                        "confidence": 98.5,
+                        "extracted_text": [
+                          "Permanent Account Number: XXXXX1234X",
+                          "Name: Ram Prasad",
+                          "Father's Name: Hari Prasad",
+                          "Date of Birth: 01-01-1990"
+                        ]
+                      }
+                    },
+                    "Citizenship": {
+                      "summary": "Example output for Nepali Citizenship",
+                      "value": {
+                        "classification": "Nepali Citizenship Document Detected",
+                        "confidence": 96,
+                        "extracted_text": [
+                          "Citizenship Number: 1234567890",
+                          "Name: Sita Karki",
+                          "Father's Name: Bhim Karki",
+                          "Date of Birth: 15-08-1985"
+                        ]
+                      }
+                    },
+                    "Passport": {
+                      "summary": "Example output for Passport",
+                      "value": {
+                        "classification": "Passport Detected",
+                        "confidence": 97.2,
+                        "extracted_text": [
+                          "Passport Number: ABCD123456",
+                          "Name: Gopal Shrestha",
+                          "Nationality: Nepali",
+                          "Date of Issue: 20-05-2020",
+                          "Date of Expiry: 20-05-2030"
+                        ]
                       }
                     }
                   }

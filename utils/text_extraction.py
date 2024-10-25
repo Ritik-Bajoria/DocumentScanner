@@ -46,7 +46,8 @@ def extract_text(mask):
         return text
 
 def clean_text(text):
-    # Clean the extracted text by removing unwanted characters while keeping Nepali, English, numbers, spaces, colons, and newlines.#
-    cleaned_text = re.sub(r'[^A-Za-z0-9\[u0900-\u097F\s:\n]', '', text)  # Keep English, Nepali (Devanagari), numbers, spaces, colons, and newlines
-    cleaned_text = re.sub(r'(\n\s*)+', '\n', cleaned_text)  # Normalize multiple newlines to a single 
-    return cleaned_text.strip()  # Remove any leading or trailing whitespace
+    # Clean the extracted text by removing unwanted characters while keeping Nepali, English, numbers, spaces, colons, and newlines.
+    cleaned_text = re.sub(r'[^A-Za-z0-9\u0900-\u097F\s:\n]', '', text)  # Keep English, Nepali (Devanagari), numbers, spaces, colons, and newlines
+    cleaned_text = re.sub(r'(\n\s*)+', '\n', cleaned_text)  # Normalize multiple newlines to a single newline
+    text_to_list = [line.strip() for line in cleaned_text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
+    return text_to_list
