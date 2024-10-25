@@ -14,6 +14,15 @@ app = Flask(__name__)
 SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
+API_KEY = "thisismyapikey"
+
+def validate_api_key():
+    # Validate the API key from the request headers.
+    api_key = request.headers.get('X-API-KEY')
+    if api_key is None or api_key != API_KEY:
+        return False
+    return True
+
 logger = Logger()
 # Middleware: before each request
 @app.before_request
@@ -24,6 +33,9 @@ def before_request_func():
 # Route for document classification
 @app.route('/api/scanner', methods=['POST'])
 def classify_document():
+    # Validate the API key
+    if not validate_api_key():
+        return jsonify({"message": "Unauthorized access"}), 401
     try:
         # Get the image file from the request
         if 'file' not in request.files:

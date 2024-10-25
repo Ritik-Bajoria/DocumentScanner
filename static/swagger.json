@@ -16,7 +16,9 @@
         "post": {
           "summary": "Scan a document and extract text",
           "description": "Upload an image file, and the API will scan it using OCR and extract the text. For now, it supports PAN, passport, and Nepali citizenship documents.",
-          "tags": ["Document Scanner API"],
+          "tags": [
+            "Document Scanner API"
+          ],
           "requestBody": {
             "required": true,
             "content": {
@@ -71,5 +73,19 @@
           }
         }
       }
-    }
+    },
+    "components": {
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "name": "X-API-KEY",
+          "in": "header"
+        }
+      }
+    },
+    "security": [
+      {
+        "ApiKeyAuth": []
+      }
+    ]
   }
