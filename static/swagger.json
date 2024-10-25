@@ -52,7 +52,7 @@
                         "description": "The type of document scanned"
                       },
                       "confidence": {
-                        "type": "string",
+                        "type": "number",
                         "description": "Percentage of confidence in the given result"
                       },
                       "extracted_text": {
