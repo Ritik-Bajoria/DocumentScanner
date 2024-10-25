@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import cv2
 import pytesseract
+from flask_swagger_ui import get_swaggerui_blueprint
 import numpy as np
 from utils.image_processing import load_image, preprocess_image
 from utils.text_extraction import extract_text, clean_text
@@ -9,6 +10,10 @@ from logger import Logger
 # Initialize the Flask app
 
 app = Flask(__name__)
+
+SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
+
 logger = Logger()
 # Middleware: before each request
 @app.before_request
@@ -56,6 +61,25 @@ def classify_document():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Call factory function to create our blueprint
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+    },
+    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+    #    'clientId': "your-client-id",
+    #    'clientSecret': "your-client-secret-if-required",
+    #    'realm': "your-realms",
+    #    'appName': "your-app-name",
+    #    'scopeSeparator': " ",
+    #    'additionalQueryStringParams': {'test': "hello"}
+    # }
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 # Main entry point
 if __name__ == '__main__':

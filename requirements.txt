@@ -3,3 +3,4 @@ pytesseract
 numpy
 gunicorn
 flask
+flask-swagger-ui
