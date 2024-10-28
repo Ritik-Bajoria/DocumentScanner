@@ -58,9 +58,9 @@ def classify_document():
         # Extract text from the preprocessed mask
         text = extract_text(mask)
         if text == "no text":
-            return jsonify({'warning':'Blank Document detected'})
+            return jsonify({'warning':'Blank Document detected'}), 404
         elif text == "few text":
-            return jsonify({'error':'Please enter a clearer image'})
+            return jsonify({'error':'Please enter a clearer image'}), 404
         else:
             cleaned_text = clean_text(text)
 
@@ -70,11 +70,19 @@ def classify_document():
         text_to_list = [line.strip() for line in cleaned_text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
 
         # Return the classification result as a JSON response
-        return jsonify({
-            'extracted_text': text_to_list,
-            'classification': classification_result,
-            'confidence': round(confidence * 100, 2)
-        }), 200
+        # Determine the response code based on classification result
+        if classification_result == "Unknown Document":
+            return jsonify({
+                'extracted_text': text_to_list,
+                'classification': classification_result,
+                'confidence': round(confidence * 100, 2)
+            }), 404
+        else:
+            return jsonify({
+                'extracted_text': text_to_list,
+                'classification': classification_result,
+                'confidence': round(confidence * 100, 2)
+            }), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

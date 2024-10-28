@@ -101,7 +101,19 @@
                         "Date of Expiry: 20-05-2030"
                       ]
                     }
-                  },
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request (e.g., missing file or unsupported document type)"
+          },
+          "404": {
+            "description": "Unsuccessful response with extracted text",
+            "content": {
+              "application/json": {
+                "examples": {
                   "Blank_Document": {
                     "summary": "Example output for blank document",
                     "value": {
@@ -119,13 +131,20 @@
                     "value": {
                       "message": "Unathorized access"
                     }
+                  },
+                  "Unknown_doc": {
+                    "summary": "Example output for unknown document",
+                    "value": {
+                      "classification": "Unknown Document",
+                      "confidence": 0,
+                      "extracted_text": [
+                        "text"
+                      ]
+                    }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request (e.g., missing file or unsupported document type)"
           },
           "500": {
             "description": "Internal server error"
