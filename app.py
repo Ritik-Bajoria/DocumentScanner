@@ -64,9 +64,11 @@ def classify_document():
         # Classify the document
         classification_result, confidence = classify_document_fuzzy(cleaned_text)
 
+        text_to_list = [line.strip() for line in cleaned_text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
+
         # Return the classification result as a JSON response
         return jsonify({
-            'extracted_text': cleaned_text,
+            'extracted_text': text_to_list,
             'classification': classification_result,
             'confidence': round(confidence * 100, 2)
         }), 200

@@ -113,6 +113,12 @@
                     "value": {
                       "error": "Please insert a clearer image"
                     }
+                  },
+                  "Unathorized": {
+                    "summary": "Example output for unauthorized request",
+                    "value": {
+                      "message": "Unathorized access"
+                    }
                   }
                 }
               }
