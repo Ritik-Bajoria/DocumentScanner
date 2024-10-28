@@ -1,3 +1,5 @@
 fuzzyDocumentScanner.py
 .dockerignore
 combined.log
+mask_image.png
+gray_image.png

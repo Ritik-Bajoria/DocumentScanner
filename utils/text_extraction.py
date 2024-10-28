@@ -5,16 +5,16 @@ import sys
 import os 
 
 # Constants
-TESSERACT_PATH = r'../usr/bin/tesseract'
-# TESSERACT_PATH =r'C:/Program Files/Tesseract-OCR/tesseract.exe'
+# TESSERACT_PATH = r'../usr/bin/tesseract'
+TESSERACT_PATH =r'C:/Program Files/Tesseract-OCR/tesseract.exe'
 # Initialize Tesseract
 # Perform OCR and pass the tessdata directory in the config
-custom_config = r'--tessdata-dir "/usr/share/tesseract-ocr/5/tessdata/"'
+# custom_config = r'--tessdata-dir "/usr/share/tesseract-ocr/5/tessdata/"'
 pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 
 def extract_text(mask):
     #Use pytesseract to extract text from the binary mask.#
-    text = pytesseract.image_to_string(mask, lang = 'nep+eng', config =custom_config)
+    text = pytesseract.image_to_string(mask, lang = 'nep+eng')
     # Get the image dimensions
     (h, w) = mask.shape[:2]
 
@@ -29,7 +29,7 @@ def extract_text(mask):
 
     for i in range(3):
         print("text length is",len(text))
-        if(len(text)<=100):
+        if(len(text)<=50):
             mask = cv2.warpAffine(mask, M, (w, h))
             text = pytesseract.image_to_string(mask, lang = 'nep+eng')
             text = clean_text(text)

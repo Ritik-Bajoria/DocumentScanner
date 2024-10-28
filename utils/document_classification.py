@@ -72,27 +72,47 @@ def classify_document_fuzzy(cleaned_text):
         ("फोटो", "Photograph"),
         ("हस्ताक्षर", "Signature")
     ]
+    # List of keywords and phrases commonly found in a Driving License
+    driving_license_keywords = [
+        ("नेपाल सरकार", "Government of Nepal"),
+        ("सवारी चालक अनुमतिपत्र", "Driving License"),
+        ("नाम", "Name"),
+        ("ठेगाना", "Address"),
+        ("लाइसेन्स कार्यालय", "License Office"),
+        ("जन्म मिति", "Date of Birth"),
+        ("नागरिकता नम्बर", "Citizenship No."),
+        ("पासपोर्ट नम्बर", "Passport No."),
+        ("फोन नम्बर", "Phone No."),
+        ("जारी गर्ने", "Issued by"),
+        ("धारकको हस्ताक्षर", "Signature of Holder")
+    ]
+
 
     # Calculate fuzzy membership scores
     citizenship_score = fuzzy_membership_score(cleaned_text, citizenship_keywords)
     pan_card_score = fuzzy_membership_score(cleaned_text, pan_card_keywords)
     passport_score = fuzzy_membership_score(cleaned_text, passport_keywords)
+    driving_license_score = fuzzy_membership_score(cleaned_text,driving_license_keywords)
+
+    # Prepare a dictionary to store scores and corresponding classifications
+    scores = {
+        "Nepali Citizenship Document": citizenship_score,
+        "PAN Card": pan_card_score,
+        "Passport": passport_score,
+        "Driving License": driving_license_score
+    }
 
     # Determine the classification based on the highest score
     classification = "Unknown Document"
     confidence = 0.0
-    if citizenship_score > 0.4 or pan_card_score > 0.4 or passport_score > 0.4:
-        if citizenship_score > pan_card_score and citizenship_score > passport_score:
-            classification = "Nepali Citizenship Document Detected"
-            confidence = citizenship_score
-        elif pan_card_score > citizenship_score and pan_card_score > passport_score:
-            classification = "PAN Card Detected"
-            confidence = pan_card_score
-        elif passport_score > citizenship_score and passport_score > pan_card_score:
-            classification = "Passport Detected"
-            confidence = passport_score
-    else:
-        classification  = "unknown document"
+
+    # Get the highest score classification
+    highest_classification = max(scores, key=scores.get)
+
+    # Check if the highest score is above the threshold
+    if scores[highest_classification] > 0.4:
+        classification = f"{highest_classification} Detected"
+        confidence = scores[highest_classification]
 
     return classification, confidence
 

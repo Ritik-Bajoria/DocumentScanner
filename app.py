@@ -51,6 +51,9 @@ def classify_document():
 
         # Preprocess the image
         gray, mask = preprocess_image(image)
+        # Save gray and mask images in the same folder
+        cv2.imwrite('gray_image.png', gray)
+        cv2.imwrite('mask_image.png', mask)
 
         # Extract text from the preprocessed mask
         text = extract_text(mask)
