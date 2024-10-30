@@ -110,7 +110,7 @@
             "description": "Invalid request (e.g., missing file or unsupported document type)"
           },
           "404": {
-            "description": "Unsuccessful response with extracted text",
+            "description": "Unsuccessful response due to bad user input",
             "content": {
               "application/json": {
                 "examples": {
