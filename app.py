@@ -53,21 +53,44 @@ def classify_document():
         gray, mask = preprocess_image(image)
         # Save gray and mask images in the same folder
         cv2.imwrite('gray_image.png', gray)
-        cv2.imwrite('mask_image.png', mask)
 
-        # Extract text from the preprocessed mask
-        text = extract_text(mask)
+        # Get the image dimensions
+        (h, w) = mask.shape[:2]
+
+        # Define the rotation angle
+        angle = -90  # Rotate -90 degrees
+
+        # Calculate the center of the image
+        center = (w // 2, h // 2)
+
+        # Generate the rotation matrix
+        M = cv2.getRotationMatrix2D(center, angle, 1.0)
+        i = 0
+        text =""
+        confidence=0
+        while True:
+            print("text length is",len(text))
+            if(confidence<=0.4):
+                mask = cv2.warpAffine(mask, M, (w, h))
+                cv2.imwrite('mask_image.png', mask)
+                # Extract text from the preprocessed mask
+                text = extract_text(mask)
+                # Classify the document
+                text = clean_text(text)
+                classification_result, confidence = classify_document_fuzzy(text)
+            else:
+                break
+            angle += 90
+            i+=1
+            if(i>3):
+                break
+        
         if text == "no text":
             return jsonify({'warning':'Blank Document detected'}), 404
         elif text == "few text":
             return jsonify({'error':'Please enter a clearer image'}), 404
-        else:
-            cleaned_text = clean_text(text)
 
-        # Classify the document
-        classification_result, confidence = classify_document_fuzzy(cleaned_text)
-
-        text_to_list = [line.strip() for line in cleaned_text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
+        text_to_list = [line.strip() for line in text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
 
         # Return the classification result as a JSON response
         # Determine the response code based on classification result

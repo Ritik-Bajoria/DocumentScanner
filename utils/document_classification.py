@@ -28,17 +28,23 @@ def classify_document_fuzzy(cleaned_text):
     # List of keywords and phrases commonly found in a Nepali Citizenship Certificate
     citizenship_keywords = [
         ("नेपाल सरकार", "Government of Nepal"),
+        ("जिल्ला प्रशासन कार्यालय","District Administration Office"),
         ("गृह मन्त्रालय", "Ministry of Home Affairs"),
         ("जन्म मिति", "Date of Birth"),
         ("नागरिकताको प्रकार", "Type of Citizenship"),
-        ("स्थायी ठेगाना", "Permanent Address"),
+        ("स्थायी बासस्थान", "Permanent Address"),
+        ("जन्मस्थान","Birth Place"),
         ("नाम", "Name"),
+        ("थर","Surname"),
         ("बाबुको नाम", "Father's Name"),
         ("आमाको नाम", "Mother's Name"),
+        ("पतिको नाम","Husband's Name"),
+        ("पत्नीको नाम","Wife's Name"),
         ("लिङ्ग", "Gender"),
-        ("नेपाली नागरिकता प्रमाणपत्र", "Nepali Citizenship Certificate"),
+        ("नेपाली नागरिकताको प्रमाणपत्र", "Nepali Citizenship Certificate"),
         ("ठेगाना", "Address"),
-        ("जिल्ला", "District")
+        ("जिल्ला", "District"),
+        ("नागरिकता","Citizenship")
     ]
 
     # List of keywords and phrases commonly found in a PAN Card
@@ -79,10 +85,10 @@ def classify_document_fuzzy(cleaned_text):
         ("नाम", "Name"),
         ("ठेगाना", "Address"),
         ("लाइसेन्स कार्यालय", "License Office"),
-        ("जन्म मिति", "Date of Birth"),
-        ("नागरिकता नम्बर", "Citizenship No."),
-        ("पासपोर्ट नम्बर", "Passport No."),
-        ("फोन नम्बर", "Phone No."),
+        ("जन्म मिति", "DOB"),
+        ("नागरिकता नम्बर", "Citizenship No"),
+        ("पासपोर्ट नम्बर", "Passport No"),
+        ("फोन नम्बर", "Phone No"),
         ("जारी गर्ने", "Issued by"),
         ("धारकको हस्ताक्षर", "Signature of Holder")
     ]
@@ -105,9 +111,9 @@ def classify_document_fuzzy(cleaned_text):
     # Determine the classification based on the highest score
     classification = "Unknown Document"
     confidence = 0.0
-
     # Get the highest score classification
     highest_classification = max(scores, key=scores.get)
+    print(scores[highest_classification],highest_classification)
 
     # Check if the highest score is above the threshold
     if scores[highest_classification] > 0.4:

@@ -16,32 +16,10 @@ pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 def extract_text(mask):
     #Use pytesseract to extract text from the binary mask.#
     text = pytesseract.image_to_string(mask, lang = 'nep+eng', config = custom_config ) # Remove config = custom_config when running in local
-    # Get the image dimensions
-    (h, w) = mask.shape[:2]
 
-    # Define the rotation angle
-    angle = -90  # Rotate -90 degrees
-
-    # Calculate the center of the image
-    center = (w // 2, h // 2)
-
-    # Generate the rotation matrix
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
-
-    for i in range(3):
-        print("text length is",len(text))
-        if(len(text)<=50):
-            mask = cv2.warpAffine(mask, M, (w, h))
-            text = pytesseract.image_to_string(mask, lang = 'nep+eng')
-            text = clean_text(text)
-        else:
-            break
-        angle += 90
-    print(text)
     if(len(text)<=5):
         return "no text"
     elif(len(text)<=100):
-        print("\nPlease insert a clearer image\n")
         return "few text"
     else:
         return text
