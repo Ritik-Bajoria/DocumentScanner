@@ -72,7 +72,6 @@ def classify_document():
             print("text length is",len(text))
             if(confidence<=0.4):
                 mask = cv2.warpAffine(mask, M, (w, h))
-                cv2.imwrite('mask_image.png', mask)
                 # Extract text from the preprocessed mask
                 text = extract_text(mask)
                 # Classify the document
@@ -80,6 +79,7 @@ def classify_document():
                 classification_result, confidence = classify_document_fuzzy(text)
             else:
                 break
+            cv2.imwrite('mask_image.png', mask)
             angle += 90
             i+=1
             if(i>3):

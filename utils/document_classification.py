@@ -1,19 +1,9 @@
 def match_words(word, cleaned_text):
-    # for text in cleaned_text:
-    #     matched_characters = convert_words_to_char_sets(word).intersection(convert_words_to_char_sets(text))
-    #     similarity_ratio = len(matched_characters) / min(len(word), len(text))
-    #     if similarity_ratio > 0.7:
-    #         break
-
-    # if similarity_ratio > 0.7:
-    #     return true
-    # else:
-    #     return false
     if word in cleaned_text:
         return True
     else:
         return False
-
+        
 def fuzzy_membership_score(cleaned_text, keyword_pairs):
     """
     Calculate a fuzzy membership score based on the presence of keywords.
