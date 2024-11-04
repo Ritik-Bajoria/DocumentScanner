@@ -3,4 +3,4 @@ fuzzyDocumentScanner.py
 combined.log
 mask_image.png
 gray_image.png
-__pycache__
+__pycache__/
