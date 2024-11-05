@@ -58,7 +58,7 @@ def classify_document():
         (h, w) = mask.shape[:2]
 
         # Define the rotation angle
-        angle = -90  # Rotate -90 degrees
+        angle = 0  
 
         # Calculate the center of the image
         center = (w // 2, h // 2)
