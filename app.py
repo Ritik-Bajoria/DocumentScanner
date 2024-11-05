@@ -3,7 +3,7 @@ import cv2
 import pytesseract
 from flask_swagger_ui import get_swaggerui_blueprint
 import numpy as np
-from utils.image_processing import load_image, preprocess_image
+from utils.image_processing import preprocess_image
 from utils.text_extraction import extract_text, clean_text
 from utils.document_classification import classify_document_fuzzy
 from logger import Logger
