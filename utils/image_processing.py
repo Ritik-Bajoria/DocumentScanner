@@ -11,7 +11,7 @@ def preprocess_image(image):
     # Load the pre-trained model
     model = build_espcn_model(scale_factor=3)
     # Load pre-trained weights (Make sure you have this file)
-    model.load_weights('./documents_espcn_weights.weights.h5')  # Replace with your actual weights file path
+    model.load_weights('./div2k_new_espcn_weights.weights.h5')  # Replace with your actual weights file path
     
     image = image.astype('float32')/255.0
     image = apply_super_resolution(model,image)
