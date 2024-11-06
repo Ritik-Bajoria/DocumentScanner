@@ -4,3 +4,4 @@ combined.log
 *.png
 *.h5
 __pycache__/
+!div2k_espcn_weights_x3_v2.weights.h5
