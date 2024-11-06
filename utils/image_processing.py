@@ -9,9 +9,10 @@ def preprocess_image(image):
     # 1. Upscale the image quality using super resolution
 
     # Load the pre-trained model
-    model = build_espcn_model(scale_factor=3)
+    scale_factor = 3
+    model = build_espcn_model(scale_factor)
     # Load pre-trained weights (Make sure you have this file)
-    model.load_weights('./div2k_espcn_weights_x3_v2.weights.h5')  # Replace with your actual weights file path
+    model.load_weights(f'./div2k_espcn_weights_x{scale_factor}_v2.weights.h5')  # Replace with your actual weights file path
     
     image = image.astype('float32')/255.0
     image = apply_super_resolution(model,image)
