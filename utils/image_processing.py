@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from datetime import datetime
 
 def preprocess_image(image):
 
@@ -12,7 +13,9 @@ def preprocess_image(image):
     scale_factor = 3
     model = build_espcn_model(scale_factor)
     # Load pre-trained weights (Make sure you have this file)
-    model.load_weights(f'./div2k_espcn_weights_x{scale_factor}_v2.weights.h5')  # Replace with your actual weights file path
+    date = datetime.now().strftime('%Y-%m-%d') # for automatic date
+    # date = "2024-11-07" # for custom date 
+    model.load_weights(f'./div2k_espcn_weights_x{scale_factor}_{date}.weights.h5')  # Replace with your actual weights file path
     
     image = image.astype('float32')/255.0
     image = apply_super_resolution(model,image)
