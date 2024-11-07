@@ -63,14 +63,14 @@ def classify_document():
         # Calculate the center of the image
         center = (w // 2, h // 2)
 
-        # Generate the rotation matrix
-        M = cv2.getRotationMatrix2D(center, angle, 1.0)
         i = 0
         text =""
         confidence=0
         while True:
             print("text length is",len(text))
             if(confidence<=0.4):
+                # Generate the rotation matrix
+                M = cv2.getRotationMatrix2D(center, angle, 1.0)
                 mask = cv2.warpAffine(mask, M, (w, h))
                 # Extract text from the preprocessed mask
                 text = extract_text(mask)
@@ -81,9 +81,9 @@ def classify_document():
                 break
             cv2.imwrite('mask_image.png', mask)
             angle += 90
-            i+=1
             if(i>3):
                 break
+            i+=1
         
         if text == "no text":
             return jsonify({'warning':'Blank Document detected'}), 404
