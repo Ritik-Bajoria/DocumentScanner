@@ -73,7 +73,9 @@ def classify_document():
                 M = cv2.getRotationMatrix2D(center, angle, 1.0)
                 mask = cv2.warpAffine(mask, M, (w, h))
                 # Extract text from the preprocessed mask
-                text = extract_text(mask)
+                extract_text = extract_text(mask)
+                if(len(extract_text)>=len(text)):
+                    text = extract_text
                 # Classify the document
                 text = clean_text(text)
                 classification_result, confidence = classify_document_fuzzy(text)
