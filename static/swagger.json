@@ -3,7 +3,7 @@
   "info": {
     "title": "Document Scanner API",
     "description": "API for scanning documents, extracting text using OCR, and validating documents like PAN, Passport, and Nepali Citizenship.",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "servers": [
     {
