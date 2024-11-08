@@ -56,6 +56,8 @@ def classify_document(version):
             gray, mask = preprocess_image1(image)
         elif version == 2:
             gray, mask = preprocess_image2(image)
+        else:
+            return jsonify({'error': 'Invalid URL'}), 404
 
         # Save gray and mask images in the same folder
         cv2.imwrite('gray_image.png', gray)
