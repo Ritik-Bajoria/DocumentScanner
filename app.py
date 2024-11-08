@@ -33,6 +33,7 @@ def before_request_func():
 # Route for document classification
 @app.route('/api/v<int:version>/scanner', methods=['POST'])
 def classify_document(version):
+
     # Validate the API key
     if not validate_api_key():
         return jsonify({"message": "Unauthorized access"}), 401
@@ -108,7 +109,7 @@ def classify_document(version):
             if(i>2):
                 break
             i+=1
-        
+
         if text == "no text":
             return jsonify({'warning':'Blank Document detected'}), 404
         elif text == "few text":
