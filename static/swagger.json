@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Document Scanner API",
-    "description": "API for scanning documents, extracting text using OCR, and validating documents like PAN, Passport, and Nepali Citizenship.\n\n\nThis is the second version of the document scanner API which uses ESPCN to convert image to super resolution during pre processing.",
-    "version": "2.0.0"
+    "description": "API for scanning documents, extracting text using OCR, and validating documents like PAN, Passport, and Nepali Citizenship.",
+    "version": "1.0.0"
   },
   "servers": [
     {
@@ -12,10 +12,150 @@
     }
   ],
   "paths": {
-    "/api/v2/scanner": {
+    "/api/v1/scanner": {
       "post": {
         "summary": "Scan a document and extract text",
         "description": "Upload an image file, and the API will scan it using OCR and extract the text. For now, it supports PAN, passport, and Nepali citizenship documents.",
+        "tags": [
+          "Document Scanner API"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The document image to be scanned"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with extracted text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "classification": {
+                      "type": "string",
+                      "description": "The type of document scanned"
+                    },
+                    "confidence": {
+                      "type": "number",
+                      "description": "Percentage of confidence in the given result"
+                    },
+                    "extracted_text": {
+                      "type": "string",
+                      "description": "Text extracted from the document"
+                    }
+                  }
+                },
+                "examples": {
+                  "PAN": {
+                    "summary": "Example output for PAN card",
+                    "value": {
+                      "classification": "PAN card Detected",
+                      "confidence": 98.5,
+                      "extracted_text": [
+                        "Permanent Account Number: XXXXX1234X",
+                        "Name: Ram Prasad",
+                        "Father's Name: Hari Prasad",
+                        "Date of Birth: 01-01-1990"
+                      ]
+                    }
+                  },
+                  "Citizenship": {
+                    "summary": "Example output for Nepali Citizenship",
+                    "value": {
+                      "classification": "Nepali Citizenship Document Detected",
+                      "confidence": 96,
+                      "extracted_text": [
+                        "Citizenship Number: 1234567890",
+                        "Name: Sita Karki",
+                        "Father's Name: Bhim Karki",
+                        "Date of Birth: 15-08-1985"
+                      ]
+                    }
+                  },
+                  "Passport": {
+                    "summary": "Example output for Passport",
+                    "value": {
+                      "classification": "Passport Detected",
+                      "confidence": 97.2,
+                      "extracted_text": [
+                        "Passport Number: ABCD123456",
+                        "Name: Gopal Shrestha",
+                        "Nationality: Nepali",
+                        "Date of Issue: 20-05-2020",
+                        "Date of Expiry: 20-05-2030"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request (e.g., missing file or unsupported document type)"
+          },
+          "404": {
+            "description": "Unsuccessful response due to bad user input",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Blank_Document": {
+                    "summary": "Example output for blank document",
+                    "value": {
+                      "warning": "Blank document detected"
+                    }
+                  },
+                  "Unclear_Image": {
+                    "summary": "Example output for unclear images",
+                    "value": {
+                      "error": "Please insert a clearer image"
+                    }
+                  },
+                  "Unathorized": {
+                    "summary": "Example output for unauthorized request",
+                    "value": {
+                      "message": "Unathorized access"
+                    }
+                  },
+                  "Unknown_doc": {
+                    "summary": "Example output for unknown document",
+                    "value": {
+                      "classification": "Unknown Document",
+                      "confidence": 0,
+                      "extracted_text": [
+                        "text"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v2/scanner": {
+      "post": {
+        "summary": "Scan a document and extract text",
+        "description": "Upload an image file, and the API will scan it using OCR and extract the text. For now, it supports PAN, passport, and Nepali citizenship documents.\n\n\nThis is the second version of the document scanner API which uses ESPCN to convert image to super resolution during pre processing.",
         "tags": [
           "Document Scanner API"
         ],

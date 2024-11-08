@@ -4,9 +4,9 @@ import re
 import sys
 import os 
 
-# Constants
+## Constants
 # TESSERACT_PATH = r'../usr/bin/tesseract' # TESSERACT_PATH ONLY FOR RUNNING IN DOCKER
-TESSERACT_PATH =r'C:/Program Files/Tesseract-OCR/tesseract.exe' # UNCOMMENT IF RUNNING IN LOCAL AND COMMENT DOCKER TESSERACT_PATH
+TESSERACT_PATH =r'C:/Program Files/Tesseract-OCR/tesseract.exe' # UNCOMMENT IF RUNNING IN LOCAL AND COMMENT THE DOCKER TESSERACT_PATH DEFINED ABOVE
 
 # Initialize Tesseract
 # Perform OCR and pass the tessdata directory in the config
@@ -15,8 +15,8 @@ pytesseract.pytesseract.tesseract_cmd = TESSERACT_PATH
 
 def extract_text(mask):
     #Use pytesseract to extract text from the binary mask.#
-    text = pytesseract.image_to_string(mask, lang = 'nep+eng' ) # Remove config = custom_config when running in local
-
+    # text = pytesseract.image_to_string(mask, lang = 'nep+eng', config = custom_config ) # UNCOMMENT ONLY FOR RUNNING IN DOCKER
+    text = pytesseract.image_to_string(mask, lang = 'nep+eng') # UNCOMMENT IF RUNNING IN LOCAL AND COMMENT ABOVE LINE
     if(len(text)<=5):
         return "no text"
     elif(len(text)<=100):

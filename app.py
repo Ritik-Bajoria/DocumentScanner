@@ -3,7 +3,7 @@ import cv2
 import pytesseract
 from flask_swagger_ui import get_swaggerui_blueprint
 import numpy as np
-from utils.image_processing import preprocess_image
+from utils.image_processing import preprocess_image1, preprocess_image2
 from utils.text_extraction import extract_text, clean_text
 from utils.document_classification import classify_document_fuzzy
 from logger import Logger
@@ -31,8 +31,8 @@ def before_request_func():
     logger.info(f"Request from {request.remote_addr} at {request.method} {request.url}")
 
 # Route for document classification
-@app.route('/api/v2/scanner', methods=['POST'])
-def classify_document():
+@app.route('/api/v<int:version>/scanner', methods=['POST'])
+def classify_document(version):
     # Validate the API key
     if not validate_api_key():
         return jsonify({"message": "Unauthorized access"}), 401
@@ -48,9 +48,14 @@ def classify_document():
         # Read the image file
         image = np.frombuffer(file.read(), np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-
         # Preprocess the image
-        gray, mask = preprocess_image(image)
+        gray = image
+        mask = image
+        if version == 1:
+            gray, mask = preprocess_image1(image)
+        elif version == 2:
+            gray, mask = preprocess_image2(image)
+
         # Save gray and mask images in the same folder
         cv2.imwrite('gray_image.png', gray)
 

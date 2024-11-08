@@ -5,7 +5,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from datetime import datetime
 
-def preprocess_image(image):
+def preprocess_image2(image):
 
     # 1. Upscale the image quality using super resolution
 
@@ -60,3 +60,20 @@ def apply_super_resolution(model, low_res_image):
     sr_image = model.predict(low_res_image)[0]  # Take the first (and only) element
     sr_image = np.clip(sr_image, 0, 1)  # Ensure pixel values are between 0 and 1
     return sr_image
+
+def preprocess_image1(image):
+ 
+    # 1. Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # 2. Apply Gaussian Blur to reduce noise
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    
+    # 3. Sharpen the image using a kernel
+    kernel = np.array([[0, -1, 0], [-1, 5,-1], [0, -1, 0]])
+    gray = cv2.filter2D(src=gray, ddepth=-1, kernel=kernel)
+    
+    # 4. Apply adaptive thresholding for better binarization in varying lighting
+    mask = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 201, 30)
+    
+    return gray, mask
