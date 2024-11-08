@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Document Scanner API",
-    "description": "API for scanning documents, extracting text using OCR, and validating documents like PAN, Passport, and Nepali Citizenship.",
+    "description": "API for scanning documents, extracting text using OCR, and validating documents like PAN, Passport, and Nepali Citizenship.\n\n\nThis is the second version of the document scanner API which uses ESPCN to convert image to super resolution during pre processing.",
     "version": "2.0.0"
   },
   "servers": [
