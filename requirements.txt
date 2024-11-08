@@ -4,3 +4,5 @@ numpy
 gunicorn
 flask
 flask-swagger-ui
+tensorflow
+matplotlib
