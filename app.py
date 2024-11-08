@@ -31,7 +31,7 @@ def before_request_func():
     logger.info(f"Request from {request.remote_addr} at {request.method} {request.url}")
 
 # Route for document classification
-@app.route('/api/scanner', methods=['POST'])
+@app.route('/api/v2/scanner', methods=['POST'])
 def classify_document():
     # Validate the API key
     if not validate_api_key():
