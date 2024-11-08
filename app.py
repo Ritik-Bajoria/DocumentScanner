@@ -54,37 +54,56 @@ def classify_document():
         # Save gray and mask images in the same folder
         cv2.imwrite('gray_image.png', gray)
 
-        # Get the image dimensions
-        (h, w) = mask.shape[:2]
-
-        # Define the rotation angle
-        angle = -90  # Rotate -90 degrees
-
-        # Calculate the center of the image
-        center = (w // 2, h // 2)
-
-        # Generate the rotation matrix
-        M = cv2.getRotationMatrix2D(center, angle, 1.0)
         i = 0
         text =""
         confidence=0
+        classification_result = ""
         while True:
-            print("text length is",len(text))
             if(confidence<=0.4):
-                mask = cv2.warpAffine(mask, M, (w, h))
                 # Extract text from the preprocessed mask
-                text = extract_text(mask)
-                # Classify the document
-                text = clean_text(text)
-                classification_result, confidence = classify_document_fuzzy(text)
+                extracted_text = extract_text(mask)
+                if(len(extracted_text)>=len(text)):
+                    text = extracted_text
+                    print("text length is",len(text))
+                    # Classify the document
+                    text = clean_text(text)
+                    classification_result, confidence = classify_document_fuzzy(text)
+                else:
+                    print("text length is",len(extracted_text))
+                    extracted_text = clean_text(extracted_text)
+                    classify_document_fuzzy(extracted_text)
+
+                # Get the image dimensions
+                (h, w) = mask.shape[:2]
+
+                # Define the rotation angle
+                angle = 90 
+
+                # Calculate the center of the image
+                center = (w // 2, h // 2)
+                cv2.imwrite('mask_image.png', mask)
+
+                # Generate the rotation matrix
+                M = cv2.getRotationMatrix2D(center, angle, 1.0)
+                # Calculate the new bounding dimensions of the image
+                cos = abs(M[0, 0])
+                sin = abs(M[0, 1])
+
+                # Compute new dimensions after rotation
+                new_w = int((h * sin) + (w * cos))
+                new_h = int((h * cos) + (w * sin))
+
+                # Adjust the rotation matrix to consider the translation
+                M[0, 2] += (new_w / 2) - center[0]
+                M[1, 2] += (new_h / 2) - center[1]
+                
+                mask = cv2.warpAffine(mask, M, (new_w, new_h))
             else:
                 break
-            cv2.imwrite('mask_image.png', mask)
-            angle += 90
-            i+=1
-            if(i>3):
+            if(i>2):
                 break
-        
+            i+=1
+            
         if text == "no text":
             return jsonify({'warning':'Blank Document detected'}), 404
         elif text == "few text":

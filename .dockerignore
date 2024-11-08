@@ -1,4 +1,3 @@
 fuzzyDocumentScanner.py
-*.log
 *.png
-__pycache__/
+.gitignore
