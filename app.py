@@ -7,6 +7,8 @@ from utils.image_processing import preprocess_image1, preprocess_image2
 from utils.text_extraction import extract_text, clean_text
 from utils.document_classification import classify_document_fuzzy
 from logger import Logger
+import signal
+import sys
 # Initialize the Flask app
 
 app = Flask(__name__)
@@ -15,6 +17,16 @@ SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
 API_KEY = "thisismyapikey"
+
+# Graceful shutdown function
+def graceful_shutdown(signal, frame):
+    logger.info("Shutting down gracefully...")
+    # Perform any cleanup here if needed
+    sys.exit(0)
+
+# Register signal handlers for graceful shutdown
+signal.signal(signal.SIGINT, graceful_shutdown)
+signal.signal(signal.SIGTERM, graceful_shutdown)
 
 def validate_api_key():
     # Validate the API key from the request headers.
