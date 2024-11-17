@@ -41,22 +41,46 @@ logger = Logger()
 def before_request_func():
     # This will run before every request
     logger.info(f"Request from {request.remote_addr} at {request.method} {request.url}")
+    
+# Error response in case of route not found
+@app.errorhandler(404)
+def not_found_error(e):
+    return jsonify({
+        "error": True,
+        "message": "URL not found"
+    }), 404
+
+# Error response in case of method not allowed
+@app.errorhandler(405)
+def method_not_allowed_error(e):
+    return jsonify({
+        "error": True,
+        "message": "Method not allowed"
+    }), 405
 
 # Route for document classification
 @app.route('/api/v<int:version>/scanner', methods=['POST'])
 def classify_document(version):
-
     # Validate the API key
     if not validate_api_key():
-        return jsonify({"message": "Unauthorized access"}), 401
+        return jsonify({
+            "error":True,
+            "message": "Unauthorized access"
+            }), 401
     try:
         # Get the image file from the request
         if 'file' not in request.files:
-            return jsonify({'error': 'No file part in the request'}), 400
+            return jsonify({
+                "error": True,
+                'message': 'No file part in the request'
+                }), 400
 
         file = request.files['file']
         if file.filename == '':
-            return jsonify({'error': 'No selected file'}), 400
+            return jsonify({
+                "error": True,
+                'message': 'No selected file'
+                }), 400
 
         # Read the image file
         image = np.frombuffer(file.read(), np.uint8)
@@ -69,7 +93,10 @@ def classify_document(version):
         elif version == 2:
             gray, mask = preprocess_image2(image)
         else:
-            return jsonify({'error': 'Invalid URL'}), 404
+            return jsonify({
+                "error": True,
+                'message': 'Invalid URL'
+                }), 404
 
         # Save gray and mask images in the same folder
         cv2.imwrite('gray_image.png', gray)
@@ -84,12 +111,12 @@ def classify_document(version):
                 extracted_text = extract_text(mask)
                 if(len(extracted_text)>=len(text)):
                     text = extracted_text
-                    print("text length is",len(text))
+                    # print("text length is",len(text))
                     # Classify the document
                     text = clean_text(text)
                     classification_result, confidence = classify_document_fuzzy(text)
                 else:
-                    print("text length is",len(extracted_text))
+                    # print("text length is",len(extracted_text))
                     extracted_text = clean_text(extracted_text)
                     classify_document_fuzzy(extracted_text)
 
@@ -125,9 +152,15 @@ def classify_document(version):
             i+=1
 
         if text == "no text":
-            return jsonify({'warning':'Blank Document detected'}), 404
+            return jsonify({
+                'error':True,
+                'warning':'Blank Document detected'
+                }), 404
         elif text == "few text":
-            return jsonify({'error':'Please enter a clearer image'}), 404
+            return jsonify({
+                'error':True,
+                'message':'Please enter a clearer image'
+                }), 404
 
         text_to_list = [line.strip() for line in text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
 

@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 import cv2
 from datetime import datetime
@@ -6,7 +7,11 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 
+# Hide the root Tkinter window
+Tk().withdraw()
 def build_espcn_model(scale_factor):
     model = models.Sequential()
     
@@ -53,7 +58,24 @@ def preprocess_images(images):
     return images
 
 # Load high-resolution images
-image_folder = "C:\\Users\\Legion\\Downloads\\archive\\DIV2K_valid_HR\\DIV2K_valid_HR"  # Replace with your folder path
+# for static path
+# image_folder = "C:\\Users\\Legion\\Downloads\\archive\\DIV2K_valid_HR\\DIV2K_valid_HR"  # Replace with your folder path
+
+# for dynamic path
+image_folder = askdirectory(title="Select Folder Containing Images  to train the model")
+
+# Validate the selected path
+if image_folder:
+    if os.path.exists(image_folder):
+        print(f"Images will be loaded from: {image_folder}")
+    else:
+        print("The selected path is invalid.")
+        sys.exit(0)
+else:
+    print("No folder selected.")
+    sys.exit(0)
+
+# load the images from the path
 high_res_images = load_images(image_folder, target_size=(255, 255))
 
 # Create low-resolution images
@@ -75,6 +97,6 @@ model.fit(low_res_images, high_res_images, epochs=50, batch_size=16)
 
 name = f'div2k_espcn_weights_x{scale_factor}_{datetime.now().strftime('%Y-%m-%d')}.weights.h5'
 # Save the model weights
-model.save_weights(name)  # Save the trained weights
+model.save_weights(f"{name}")  # Save the trained weights
 
 print(f"Training complete and weights saved as {name}.")

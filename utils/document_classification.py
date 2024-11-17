@@ -103,7 +103,7 @@ def classify_document_fuzzy(cleaned_text):
     confidence = 0.0
     # Get the highest score classification
     highest_classification = max(scores, key=scores.get)
-    print(scores[highest_classification],highest_classification)
+    # print(scores[highest_classification],highest_classification)
 
     # Check if the highest score is above the threshold
     if scores[highest_classification] > 0.4:
