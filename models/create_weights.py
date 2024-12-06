@@ -57,46 +57,50 @@ def preprocess_images(images):
     images = images.astype('float32') / 255.0  # Normalize images
     return images
 
-# Load high-resolution images
-# for static path
-# image_folder = "C:\\Users\\Legion\\Downloads\\archive\\DIV2K_valid_HR\\DIV2K_valid_HR"  # Replace with your folder path
+def create_wights():
+    # Load high-resolution images
+    # for static path
+    # image_folder = "C:\\Users\\Legion\\Downloads\\archive\\DIV2K_valid_HR\\DIV2K_valid_HR"  # Replace with your folder path
 
-# for dynamic path
-image_folder = askdirectory(title="Select Folder Containing Images  to train the model")
+    # for dynamic path
+    image_folder = askdirectory(title="Select Folder Containing Images  to train the model")
 
-# Validate the selected path
-if image_folder:
-    if os.path.exists(image_folder):
-        print(f"Images will be loaded from: {image_folder}")
+    # Validate the selected path
+    if image_folder:
+        if os.path.exists(image_folder):
+            print(f"Images will be loaded from: {image_folder}")
+        else:
+            print("The selected path is invalid.")
+            sys.exit(0)
     else:
-        print("The selected path is invalid.")
+        print("No folder selected.")
         sys.exit(0)
-else:
-    print("No folder selected.")
-    sys.exit(0)
 
-# load the images from the path
-high_res_images = load_images(image_folder, target_size=(255, 255))
+    # load the images from the path
+    high_res_images = load_images(image_folder, target_size=(255, 255))
 
-# Create low-resolution images
-scale_factor = 3  # Set the desired scale factor
-low_res_images = create_low_res_images(high_res_images, scale_factor)
+    # Create low-resolution images
+    scale_factor = 3  # Set the desired scale factor
+    low_res_images = create_low_res_images(high_res_images, scale_factor)
 
-# Preprocess images
-low_res_images = preprocess_images(low_res_images)
-high_res_images = preprocess_images(high_res_images)
+    # Preprocess images
+    low_res_images = preprocess_images(low_res_images)
+    high_res_images = preprocess_images(high_res_images)
 
-# Build the model
-model = build_espcn_model(scale_factor)
+    # Build the model
+    model = build_espcn_model(scale_factor)
 
-# Compile the model
-model.compile(optimizer=Adam(), loss=MeanSquaredError())
+    # Compile the model
+    model.compile(optimizer=Adam(), loss=MeanSquaredError())
 
-# Train the model
-model.fit(low_res_images, high_res_images, epochs=50, batch_size=16)
+    # Train the model
+    model.fit(low_res_images, high_res_images, epochs=50, batch_size=16)
 
-name = f'div2k_espcn_weights_x{scale_factor}_{datetime.now().strftime('%Y-%m-%d')}.weights.h5'
-# Save the model weights
-model.save_weights(f"{name}")  # Save the trained weights
+    name = f'div2k_espcn_weights_x{scale_factor}_{datetime.now().strftime('%Y-%m-%d')}.weights.h5'
+    # Save the model weights
+    model.save_weights(f"{name}")  # Save the trained weights
 
-print(f"Training complete and weights saved as {name}.")
+    print(f"Training complete and weights saved as {name}.")
+
+if __name__ == '__main__':
+    create_wights()
