@@ -22,7 +22,10 @@ def preprocess_image2(image):
     image = image *255.0
     image = np.clip(image, 0, 255)  # Ensure pixel values are within [0, 255]
     image = image.astype(np.uint8) 
-    cv2.imwrite('SR_image.png',image)
+
+    # uncomment to save sr image in the working directory
+    # cv2.imwrite('SR_image.png',image)
+    
     # 2. Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         

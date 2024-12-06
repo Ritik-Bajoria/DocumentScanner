@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doc_scanner_api
+    ports:
+      - "5000:5000"
+    environment:
+      - API_KEY=${API_KEY}
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - FLASK_APP=app.py

@@ -9,7 +9,9 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import MeanSquaredError
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
+from logger import Logger
 
+logger = Logger()
 # Hide the root Tkinter window
 Tk().withdraw()
 def build_espcn_model(scale_factor):
@@ -100,7 +102,7 @@ def create_wights():
     # Save the model weights
     model.save_weights(f"{name}")  # Save the trained weights
 
-    print(f"Training complete and weights saved as {name}.")
+    logger.info(f"Training complete and weights saved as {name}.")
 
 if __name__ == '__main__':
     create_wights()

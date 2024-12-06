@@ -1,3 +1,4 @@
+# import all the necessary libraries
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import cv2
@@ -10,41 +11,46 @@ from utils.document_classification import classify_document_fuzzy
 from logger import Logger
 import signal
 import sys
-# Initialize the Flask app
+import os
 
+# Initialize the Flask app
 app = Flask(__name__)
 CORS(app)
 
+# create a Logger instance
+logger = Logger()
+
+# swagger for documentation
 SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
 API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
-API_KEY = "thisismyapikey"
+# get api key from envioronment 
+API_KEY = os.getenv('API_KEY')
 
-# Graceful shutdown function
+# function for Graceful shutdown 
 def graceful_shutdown(signal, frame):
     logger.info("Shutting down gracefully...")
     # Perform any cleanup here if needed
     sys.exit(0)
 
 # Register signal handlers for graceful shutdown
-signal.signal(signal.SIGINT, graceful_shutdown)
-signal.signal(signal.SIGTERM, graceful_shutdown)
+signal.signal(signal.SIGINT, graceful_shutdown) # trigger: ctrl+c
+signal.signal(signal.SIGTERM, graceful_shutdown) # trigger: kill pid
 
+# function to validate the API key from the request headers.
 def validate_api_key():
-    # Validate the API key from the request headers.
     api_key = request.headers.get('X-API-KEY')
     if api_key is None or api_key != API_KEY:
         return False
     return True
 
-logger = Logger()
-# Middleware: before each request
+# Middleware: before each request to create logs for every request
 @app.before_request
 def before_request_func():
     # This will run before every request
     logger.info(f"Request from {request.remote_addr} at {request.method} {request.url}")
     
-# Error response in case of route not found
+# Error response(json format) in case of route not found
 @app.errorhandler(404)
 def not_found_error(e):
     return jsonify({
@@ -52,7 +58,7 @@ def not_found_error(e):
         "message": "URL not found"
     }), 404
 
-# Error response in case of method not allowed
+# Error response(json format) in case of method not allowed
 @app.errorhandler(405)
 def method_not_allowed_error(e):
     return jsonify({
@@ -61,7 +67,7 @@ def method_not_allowed_error(e):
     }), 405
 
 # Route for document classification
-@app.route('/api/v<int:version>/scanner', methods=['POST'])
+@app.route('/api/v<int:version>/scanner', methods=['POST']) # version may be 1 or 2 for now
 def classify_document(version):
     # Validate the API key
     if not validate_api_key():
@@ -87,9 +93,10 @@ def classify_document(version):
         # Read the image file
         image = np.frombuffer(file.read(), np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+
         # Preprocess the image
-        gray = image
-        mask = image
+        gray = image # just for initializing gray as an image np array
+        mask = image # just for initializing mask as an image np array 
         if version == 1:
             gray, mask = preprocess_image1(image)
         elif version == 2:
@@ -100,8 +107,8 @@ def classify_document(version):
                 'message': 'Invalid URL'
                 }), 404
 
-        # Save gray and mask images in the same folder
-        cv2.imwrite('gray_image.png', gray)
+        # Uncomment to save gray image in the same folder
+        # cv2.imwrite('gray_image.png', gray)
 
         i = 0
         text =""
@@ -130,7 +137,9 @@ def classify_document(version):
 
                 # Calculate the center of the image
                 center = (w // 2, h // 2)
-                cv2.imwrite('mask_image.png', mask)
+
+                # Uncomment to save mask image in working directory
+                # cv2.imwrite('mask_image.png', mask)
 
                 # Generate the rotation matrix
                 M = cv2.getRotationMatrix2D(center, angle, 1.0)
@@ -164,7 +173,8 @@ def classify_document(version):
                 'message':'Please enter a clearer image'
                 }), 404
 
-        text_to_list = [line.strip() for line in text.strip().split('\n') if line.strip()]  # Split into lines, remove empty lines, and trim whitespace
+        # Split into lines, remove empty lines, and trim whitespace
+        text_to_list = [line.strip() for line in text.strip().split('\n') if line.strip()]  
 
         # Return the classification result as a JSON response
         # Determine the response code based on classification result
@@ -184,7 +194,7 @@ def classify_document(version):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Call factory function to create our blueprint
+# Call factory function to create swagger blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
     API_URL,
@@ -205,6 +215,7 @@ app.register_blueprint(swaggerui_blueprint)
 
 # Main entry point
 if __name__ == '__main__':
-    port = 8000
-    app.run(debug=True,port=port)
+    port = os.getenv('PORT')
+    host = os.getenv('HOST')
+    app.run(debug=True,port=port,host=host)
     logger.info(f"Server started and is now listening on port: {port}")

@@ -24,6 +24,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run the application with Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "wsgi:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "wsgi:app"]
 # here -w 4 means that Gunicorn will spawn 4 worker processes
 # and -b 0.0.0.0:8000 specifies the IP address and port that Gunicorn will listen on

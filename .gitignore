@@ -8,3 +8,4 @@ __pycache__/
 myenv
 high_quality_images
 low_quality_images
+*.env
